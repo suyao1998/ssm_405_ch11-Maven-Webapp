@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.tcf.dao.SmbmsUserDao">
+   <select id="login" resultType="SmbmsUser" parameterType="SmbmsUser">
+   		select * from smbms_user where userCode = #{userCode} and userPassword = #{userPassword}
+   </select>
+   <select id="getSmbmsUserById" resultType="SmbmsUser" parameterType="long">
+   		select u.*,r.roleName from smbms_user u inner join smbms_role r on u.userRole = r.id
+   		where u.id = #{id}
+   </select>
+   <insert id="addSmbmsUser" parameterType="SmbmsUser">
+   	 insert into smbms_user(
+   	 	<trim suffixOverrides=",">
+   	 			<if test="id != null">id,</if>
+   	 			<if test="userCode != null">userCode,</if>
+   	 			<if test="userName != null">userName,</if>
+   	 			<if test="userPassword != null">userPassword,</if>
+   	 			<if test="gender != null">gender,</if>
+   	 			<if test="birthday != null">birthday,</if>
+   	 			<if test="phone != null">phone,</if>
+   	 			<if test="address != null">address,</if>
+   	 			<if test="userRole != null">userRole,</if>
+   	 			<if test="createdBy != null">createdBy,</if>
+   	 			<if test="creationDate != null">creationDate,</if>
+   	 			<if test="modifyBy != null">modifyBy,</if>
+   	 			<if test="modifyDate != null">modifyDate,</if>
+   	 			<if test="photoPath != null">photoPath,</if>
+   	 		</trim>
+   	 )
+   	 	values(
+   	 		<trim suffixOverrides=",">
+   	 			<if test="id != null">#{id},</if>
+   	 			<if test="userCode != null">#{userCode},</if>
+   	 			<if test="userName != null">#{userName},</if>
+   	 			<if test="userPassword != null">#{userPassword},</if>
+   	 			<if test="gender != null">#{gender},</if>
+   	 			<if test="birthday != null">#{birthday},</if>
+   	 			<if test="phone != null">#{phone},</if>
+   	 			<if test="address != null">#{address},</if>
+   	 			<if test="userRole != null">#{userRole},</if>
+   	 			<if test="createdBy != null">#{createdBy},</if>
+   	 			<if test="creationDate != null">#{creationDate},</if>
+   	 			<if test="modifyBy != null">#{modifyBy},</if>
+   	 			<if test="modifyDate != null">#{modifyDate},</if>
+   	 			<if test="photoPath != null">#{photoPath},</if>
+   	 		</trim>
+   	 	)
+   </insert>
+   <update id="updateSmbmsUser" parameterType="SmbmsUser">
+   		update smbms_user
+	   	 	<trim prefix="set" suffixOverrides="," >
+	   	 		<if test="userCode != null">userCode = #{userCode},</if>
+	   	 		<if test="userName != null">userName = #{userName},</if>
+	   	 		<if test="userPassword != null">userPassword = #{userPassword},</if>
+	   	 		<if test="gender != null">gender = #{gender},</if>
+	   	 		<if test="birthday != null">birthday = #{birthday},</if>
+	   	 		<if test="phone != null">phone = #{phone},</if>
+	   	 		<if test="address != null">address = #{address},</if>
+	   	 		<if test="userRole != null">userRole = #{userRole},</if>
+	   	 		<if test="createdBy != null">createdBy = #{createdBy},</if>
+	   	 		<if test="creationDate != null">creationDate = #{creationDate},</if>
+	   	 		<if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+	   	 		<if test="modifyDate != null">modifyDate = #{modifyDate},</if>
+	   	 	</trim>
+	   	 	where 
+	   	 		id = #{id}
+   </update>
+   <update id="changePassword">
+   	 update smbms_user set userPassword = #{newPwd} 
+   	 	where userPassword = #{userPassword} and userCode = #{userCode}
+   </update>
+   <delete id="delSmbmsUser" parameterType="string">
+   		delete from smbms_user where userCode = #{userCode}
+   </delete>
+   
+   <select id="getSmbmsUsers"  resultType="smbmsUser" >
+   		select u.*,r.roleName from smbms_user u inner join smbms_role r on u.userRole = r.id
+   		<trim prefix="where" prefixOverrides="and | or">
+   			<if test="userName != null and userName != '' ">and userName like concat('%',#{userName},'%')</if>
+   			<if test="userRole != null and userRole != 0 ">and userRole = #{userRole}</if>
+   		</trim>
+   		limit #{begin},#{size}
+   </select>
+   <select id="getUserRows"  resultType="int" >
+   		select count(1) from smbms_user u inner join smbms_role r on u.userRole = r.id
+   		<trim prefix="where" prefixOverrides="and | or">
+   			<if test="userName != null and userName != '' ">and userName like concat('%',#{userName},'%')</if>
+   			<if test="userRole != null and userRole != 0 ">and userRole = #{userRole}</if>
+   		</trim>
+   </select>
+</mapper>
